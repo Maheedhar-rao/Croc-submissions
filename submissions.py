@@ -1,6 +1,7 @@
 from supabase import create_client, Client
 import os
 from dotenv import load_dotenv
+from flask import Flask, jsonify
 
 # Load environment variables
 load_dotenv()
@@ -12,18 +13,23 @@ SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 # Initialize Supabase client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
+# Initialize Flask app
+app = Flask(__name__)
+
 def fetch_deals_submitted():
     try:
         response = supabase.table("deals_submitted").select("*").execute()
         if response.data:
             return response.data
         else:
-            print("No data found in deals_submitted table.")
             return []
     except Exception as e:
-        print(f"Error fetching data: {e}")
-        return []
+        return {"error": str(e)}
+
+@app.route("/api/deals", methods=["GET"])
+def get_deals():
+    deals = fetch_deals_submitted()
+    return jsonify(deals)
 
 if __name__ == "__main__":
-    deals = fetch_deals_submitted()
-    print(deals)
+    app.run(host="0.0.0.0", port=5000)
