@@ -1,5 +1,5 @@
 supabase
 python-dotenv
-cors
+flask-cors
 flask
 gunicorn
