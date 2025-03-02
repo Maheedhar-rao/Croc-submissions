@@ -2,6 +2,7 @@ from supabase import create_client, Client
 import os
 from dotenv import load_dotenv
 from flask import Flask, jsonify
+from flask_cors import CORS
 
 # Load environment variables
 load_dotenv()
@@ -15,6 +16,7 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Initialize Flask app
 app = Flask(__name__)
+CORS(app)
 
 def fetch_deals_submitted():
     try:
